@@ -3,21 +3,23 @@ import axios, {AxiosInstance} from 'axios';
 import { PokeResponse } from './interfaces/poke-response.interface';
 import { PokemonService } from '../pokemon/pokemon.service';
 import { CreatePokemonDto } from 'src/pokemon/dto/create-pokemon.dto';
+import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 
 @Injectable()
 export class SeedService {
 
   constructor(
-    private readonly PokemonService: PokemonService
+    private readonly PokemonService: PokemonService,
+    private readonly http: AxiosAdapter,
   ){}
 
-  private readonly axios: AxiosInstance = axios;
+  // private readonly axios: AxiosInstance = axios;
 
 
   async executeSeed(){
 
 
-    const {data} = await this.axios.get<PokeResponse>('https://pokeapi.co/api/v2/pokemon?limit=650');
+    const data = await this.http.get<PokeResponse>('https://pokeapi.co/api/v2/pokemon?limit=650');
 
     const insertPromisesArray = [];
 
