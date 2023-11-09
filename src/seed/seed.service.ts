@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import axios, {AxiosInstance} from 'axios';
 import { PokeResponse } from './interfaces/poke-response.interface';
+import { PokemonService } from '../pokemon/pokemon.service';
+import { CreatePokemonDto } from 'src/pokemon/dto/create-pokemon.dto';
 
 @Injectable()
 export class SeedService {
+
+  constructor(
+    private readonly PokemonService: PokemonService
+  ){}
 
   private readonly axios: AxiosInstance = axios;
 
@@ -17,12 +23,18 @@ export class SeedService {
       const segments = url.split('/');
       const no:number = +segments[segments.length - 2];
 
-      console.log(name, no);
+      const createPokemonDto: CreatePokemonDto = {
+        no,
+        name
+      }
+
+      this.PokemonService.create(createPokemonDto)
+      // console.log(name, no);
 
 
     })
 
-    return data.results;
+    return "Seed EXECUTED";
 
 
   }
