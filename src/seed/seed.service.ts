@@ -16,7 +16,10 @@ export class SeedService {
 
   async executeSeed(){
 
+
     const {data} = await this.axios.get<PokeResponse>('https://pokeapi.co/api/v2/pokemon?limit=650');
+
+    const insertPromisesArray = [];
 
     data.results.forEach(({name, url})=>{
 
@@ -28,11 +31,16 @@ export class SeedService {
         name
       }
 
-      this.PokemonService.create(createPokemonDto)
+      // const pokemon = this.PokemonService.create(createPokemonDto)
       // console.log(name, no);
 
+      insertPromisesArray.push(
+        this.PokemonService.create(createPokemonDto)
+      )
 
-    })
+    });
+
+    await Promise.all(insertPromisesArray)
 
     return "Seed EXECUTED";
 
